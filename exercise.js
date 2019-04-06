@@ -26,25 +26,62 @@ var reimbursementCalculator = (function () {
 	
 	_public.calculateProjects = function (projects) {
 		
-		// Wipe the map
-		dayMap = Object.create(null);
+		// start out with a clearly erroneous value so it's
+		// very obvious if validation failed
+		var totalCost = -1;
 		
-		projects.forEach(loadDaysFromProject);
+		if (projects.every(validateProject)) {
 		
-		var totalCost = 0;
-		for (var dayKey in dayMap) {
-			totalCost += getCostForDay(dayKey);
+			// Wipe the map
+			dayMap = Object.create(null);
+		
+			projects.forEach(loadDaysFromProject);
+		
+			totalCost = 0;
+			for (var dayKey in dayMap) {
+				totalCost += getCostForDay(dayKey);
+			}
+			
 		}
 		
 		return totalCost;
 		
 	};
 	
+	function validateProject(project) {
+		
+		var valid = true;
+		
+		// needs a valid cost
+		valid = valid && (project.cost == LOW_COST || project.cost == HIGH_COST);
+		
+		var startDate = new Date(project.startDate);
+		var endDate = new Date(project.endDate);
+		
+		// startDate and endDate need to be values that construct a valid Date.
+		// An invalid date's getTime() returns NaN
+		valid = valid && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime());
+		
+		// endDate needs to be on or after startDate or the date range is invalid
+		valid = valid && (startDate <= endDate);
+		
+		return valid;
+		
+	}
+	
 	function loadDaysFromProject(project) {
 		
-		var day = new Date(project.startDate);
+		// By wrapping the incoming startDate and endDate in new Date objects
+		// here we can support more flexibility in the project object format.
+		// We can accept Date objects directly, but also anything the Date
+		// constructor can turn into a date, like string representations or raw
+		// time values
+		var startDate = new Date(project.startDate);
+		var endDate = new Date(project.endDate);
 		
-		while (day <= project.endDate) {
+		var day = new Date(startDate);
+		
+		while (day <= endDate) {
 			
 			var dayKey = day.getTime();
 			if (!(dayKey in dayMap) || dayMap[dayKey] < project.cost) {
@@ -160,39 +197,101 @@ var testSetFour = [
   }
 ]
 
+var badCostTestOne = [
+  {
+    'cost': 20,
+    'startDate': new Date(2015,08,01),
+    'endDate': new Date(2015,08,03)
+  }
+]
+
+var badCostTestTwo = [
+  {
+    'cost': "LOW",
+    'startDate': new Date(2015,08,01),
+    'endDate': new Date(2015,08,03)
+  }
+]
+
+var badStartDateTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+    'startDate': "monkey",
+    'endDate': new Date(2015,08,03)
+  }
+]
+
+var badEndDateTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+    'startDate': new Date(2015,08,01),
+    'endDate': -34324233432432432432
+  }
+]
+
+var badDateRangeTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+    'startDate': new Date(2015,08,03),
+    'endDate': new Date(2015,08,01)
+  }
+]
+
+var noCostTest = [
+  {
+    'startDate': new Date(2015,08,01),
+    'endDate': new Date(2015,08,03)
+  }
+]
+
+var noStartDateTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+    'endDate': new Date(2015,08,03)
+  }
+]
+
+var noEndDateTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+    'startDate': new Date(2015,08,01)
+  }
+]
+
 var testOneExpected = 135;
 var testTwoExpected = 410;
 var testThreeExpected = 355;
 var testFourExpected = 155;
+var validationTestsExpected = -1;
+
 var testOneResult = reimbursementCalculator.calculateProjects(testSetOne);
 var testTwoResult = reimbursementCalculator.calculateProjects(testSetTwo);
 var testThreeResult = reimbursementCalculator.calculateProjects(testSetThree);
 var testFourResult = reimbursementCalculator.calculateProjects(testSetFour);
+var badCostTestOneResult = reimbursementCalculator.calculateProjects(badCostTestOne);
+var badCostTestTwoResult = reimbursementCalculator.calculateProjects(badCostTestTwo);
+var badStartDateTestResult = reimbursementCalculator.calculateProjects(badStartDateTest);
+var badEndDateTestResult = reimbursementCalculator.calculateProjects(badEndDateTest);
+var badDateRangeTestResult = reimbursementCalculator.calculateProjects(badDateRangeTest);
+var noCostTestResult = reimbursementCalculator.calculateProjects(noCostTest);
+var noStartDateTestResult = reimbursementCalculator.calculateProjects(noStartDateTest);
+var noEndDateTestResult = reimbursementCalculator.calculateProjects(noEndDateTest);
 
-document.write("Test 1: Expected " + testOneExpected + ", Calculated " + testOneResult + ".");
-if (testOneExpected != testOneResult) {
-	document.write(" FAILED<br>");
-} else {
-	document.write(" PASSED<br>");
+function displayTestResult(label, expected, result) {
+	document.write(label + ": Expected " + expected + ", Calculated " + result + ".");
+	expected != result ? document.write(" FAILED<br>") : document.write(" PASSED<br>");
 }
 
-document.write("Test 2: Expected " + testTwoExpected + ", Calculated " + testTwoResult + ".");
-if (testTwoExpected != testTwoResult) {
-	document.write(" FAILED<br>");
-} else {
-	document.write(" PASSED<br>");
-}
+displayTestResult("Test 1", testOneExpected, testOneResult);
+displayTestResult("Test 2", testTwoExpected, testTwoResult);
+displayTestResult("Test 3", testThreeExpected, testThreeResult);
+displayTestResult("Test 4", testFourExpected, testFourResult);
+displayTestResult("Bad Cost Test 1", validationTestsExpected, badCostTestOneResult);
+displayTestResult("Bad Cost Test 2", validationTestsExpected, badCostTestTwoResult);
+displayTestResult("Bad Start Date Test", validationTestsExpected, badStartDateTestResult);
+displayTestResult("Bad End Date Test", validationTestsExpected, badEndDateTestResult);
+displayTestResult("Bad Date Range Test", validationTestsExpected, badDateRangeTestResult);
+displayTestResult("No Cost Test", validationTestsExpected, noCostTestResult);
+displayTestResult("No Start Date Test", validationTestsExpected, noStartDateTestResult);
+displayTestResult("No End Date Test", validationTestsExpected, noEndDateTestResult);
 
-document.write("Test 3: Expected " + testThreeExpected + ", Calculated " + testThreeResult + ".");
-if (testThreeExpected != testThreeResult) {
-	document.write(" FAILED<br>");
-} else {
-	document.write(" PASSED<br>");
-}
-
-document.write("Test 4: Expected " + testFourExpected + ", Calculated " + testFourResult + ".");
-if (testFourExpected != testFourResult) {
-	document.write(" FAILED<br>");
-} else {
-	document.write(" PASSED<br>");
-}
