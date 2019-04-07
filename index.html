@@ -17,6 +17,7 @@
 			var newProject = $('.project-input:last').clone();
 			newProject.find('input.hasDatepicker').removeClass('hasDatepicker').removeAttr('id');
 			newProject.insertAfter('.project-input:last');
+			$('.project-input:last .datepicker_input').datepicker();
 			$('#project-inputs').addClass('multiple_projects');
 		});
 		$('body').on('click', '.remove-project', function() {
