@@ -10,18 +10,23 @@
 	<!-- Doing some of the initial UI coding here for convenience since I'm working in the github web ui
 		and it's a pain to have multiple files open. Will move to a separate file later. -->
 	<script>
-		$('body').on('focus', ".datepicker_input", function() {
+		$('body').on('focus', '.datepicker_input', function() {
     		$(this).datepicker();
 		});
-		$('body').on('click', ".add-project", function() {
-			$('#default-project').clone().insertAfter('.project-input:last');
+		$('body').on('click', '.add-project', function() {
+			$('.project-input:last').clone().insertAfter('.project-input:last');
+		});
+		$('body').on('click', '.remove-project', function() {
+			if ($('.project-input').length > 1) { // don't remove the last one
+				$(this).parents(".project-input").remove();
+			}
 		});
 	</script>
 </head>
 <body>
 	<div id="ui-wrapper">
 		<div id="project-inputs">
-			<div id="default-project" class="project-input">
+			<div class="project-input">
 				Cost:
 				<!-- Ideally the values for the cost tiers should be coming directly from the javascript
 					to make sure it all stays in sync, but since this UI is just here to facilitate testing
