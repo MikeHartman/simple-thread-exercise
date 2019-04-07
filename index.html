@@ -25,6 +25,24 @@
 				}
 			} 
 		});
+		$('body').on('click', '#calculate', function() {
+			$('#calculator-error').hide();
+			$('#calculator-output').hide();
+			var projects = $('.project-input').map(function() {
+    				return {
+						'cost': $(this).children('.cost').val(),
+						'startDate': $(this).children('start_date').datepicker('getDate'),
+						'endDate': $(this).children('end_date').datepicker('getDate'),
+					}
+  				}).get();
+			var result = reimbursementCalculator.calculateProjects(projects);
+			if (result < 0) {
+				$('#calculator-error').show();
+			} else {
+				$('#calculator-output-amount').text("$" + result);
+				$('#calculator-output').show();
+			}
+		});
 	</script>
 	<style>
 		.remove-project {
@@ -41,6 +59,10 @@
 		
 		.project-input:last-child .add-project {
 			visibility: visible;
+		}
+		
+		#calculator-error, #calculator-output {
+			display: none;
 		}
 	</style>
 </head>
@@ -67,10 +89,20 @@
 			</div>
 		</div>
 		<button id="calculate" class="ui-button ui-widget ui-corner-all">
-    		Calculate reimbursement <span class="ui-icon ui-icon-check"></span>
+    		Calculate reimbursement
   		</button>
 	</div>
-	<div id="output">
+	<div class="ui-widget" id="calculator-error">
+		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+			<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+			<strong>Alert:</strong> The calculator returned an error. Check your inputs!</p>
+		</div>
+	</div>
+	<div class="ui-widget" id="calculator-output">
+		<div class="ui-state-default ui-corner-all" style="padding: 0 .7em;">
+			<p><span class="ui-icon ui-icon-check" style="float: left; margin-right: .3em;"></span>
+				<strong>Reimbursement:</strong> <span id="calculator-output-amount"></span></p>
+		</div>
 	</div>
 </body>
 </html>
