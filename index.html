@@ -11,6 +11,7 @@
 	<!-- Doing some of the initial UI coding here for convenience since I'm working in the github web ui
 		and it's a pain to have multiple files open. Will move to a separate file later. -->
 	<script>
+	$( document ).ready(function() {	
 		$('body').on('focus', '.datepicker_input', function() {
     		$(this).datepicker();
 		});
@@ -52,6 +53,7 @@
 			$('#calculator-tests-results').html(testResults);
 			$('#calculator-tests').show();
 		});
+	});
 	</script>
 	<style>
 		.ui-widget, input, select {
