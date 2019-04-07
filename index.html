@@ -1,7 +1,48 @@
 <html>
 <head>
-  <script src="exercise.js"></script>
+	<!-- I would normally never direct-include a library like this straight from the third party's 
+    	servers, but since this is a throwaway exercise no point in junking up the repo -->
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="exercise.js"></script>
+	
+	<!-- Doing some of the initial UI coding here for convenience since I'm working in the github web ui
+		and it's a pain to have multiple files open. Will move to a separate file later. -->
+	<script>
+		$('body').on('focus', ".datepicker_input", function() {
+    		$(this).datepicker();
+		});
+	</script>
 </head>
 <body>
+	<div id="ui-wrapper">
+		<div id="project-inputs">
+			<div id="default-project" class="project-input">
+				<span class="project-label">Project 1</span>
+				Cost:
+				<!-- Ideally the values for the cost tiers should be coming directly from the javascript
+					to make sure it all stays in sync, but since this UI is just here to facilitate testing
+					the actual exercise code I'll let it slide for now -->
+				<select class="cost">
+      				<option value="1" selected="selected">Low</option>
+					<option value="2">High</option>
+    			</select>
+				Start Date: <input type="text" class="datepicker_input start_date">
+				End Date: <input type="text" class="datepicker_input end_date">
+				<button class="ui-button ui-widget ui-corner-all ui-button-icon-only remove-project" title="Remove this project">
+    				<span class="ui-icon ui-icon-minusthick"></span> Remove this project
+  				</button>
+				<button class="ui-button ui-widget ui-corner-all ui-button-icon-only add-project" title="Add new project">
+    				<span class="ui-icon ui-icon-plusthick"></span> Add new project
+  				</button>
+			</div>
+		</div>
+		<button id="calculate" class="ui-button ui-widget ui-corner-all">
+    		Calculate reimbursement <span class="ui-icon ui-icon-check"></span>
+  		</button>
+	</div>
+	<div id="output">
+	</div>
 </body>
 </html>
