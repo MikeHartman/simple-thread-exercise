@@ -15,13 +15,26 @@
 		});
 		$('body').on('click', '.add-project', function() {
 			$('.project-input:last').clone().insertAfter('.project-input:last');
+			$('#project-inputs').addClass('multiple_projects');
 		});
 		$('body').on('click', '.remove-project', function() {
 			if ($('.project-input').length > 1) { // don't remove the last one
 				$(this).parents(".project-input").remove();
-			}
+				if ($('.project-input').length == 1) {
+					$('#project-inputs').removeClass('multiple_projects');
+				}
+			} 
 		});
 	</script>
+	<style>
+		.remove-project {
+			visibility: hidden;
+		}
+		
+		#project-inputs.multiple_projects .remove-project {
+			visibility: visible;
+		}
+	</style>
 </head>
 <body>
 	<div id="ui-wrapper">
