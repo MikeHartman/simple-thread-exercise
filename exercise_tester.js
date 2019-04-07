@@ -180,7 +180,7 @@ var reimbursementCalculatorTester = (function () {
 			var result = reimbursementCalculator.calculateProjects(test.projects);
 			
 			output += test.label + ": Expected " + test.expected + ", Calculated " + result + ".";
-			expected != result ? output += " FAILED<br>" : output += " PASSED<br>";
+			test.expected != result ? output += " FAILED<br>" : output += " PASSED<br>";
 			
 		});
 		
