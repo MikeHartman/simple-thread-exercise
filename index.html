@@ -6,6 +6,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="exercise.js"></script>
+	<script src="exercise_tester.js"></script>
 	
 	<!-- Doing some of the initial UI coding here for convenience since I'm working in the github web ui
 		and it's a pain to have multiple files open. Will move to a separate file later. -->
@@ -37,7 +38,6 @@
 						'endDate': $(this).children('.end_date').datepicker('getDate'),
 					}
   				}).get();
-			debugProjects = projects;
 			var result = reimbursementCalculator.calculateProjects(projects);
 			if (result < 0) {
 				$('#calculator-error').show();
@@ -45,6 +45,12 @@
 				$('#calculator-output-amount').text("$" + result);
 				$('#calculator-output').show();
 			}
+		});
+		$('body').on('click', '#run-test', function() {
+			$('.calculator-output').hide();
+			var testResults = reimbursementCalculatorTester.runTests();
+			$('#calculator-tests-results').html(testResults);
+			$('#calculator-tests').show();
 		});
 	</script>
 	<style>
@@ -112,6 +118,12 @@
 		<div class="ui-corner-all" style="padding: 0 .7em;">
 			<p><span class="ui-icon ui-icon-check" style="float: left; margin-right: .3em;"></span>
 				<strong>Reimbursement:</strong> <span id="calculator-output-amount"></span></p>
+		</div>
+	</div>
+	<div class="ui-widget calculator-output" id="calculator-tests">
+		<div class="ui-corner-all" style="padding: 0 .7em;">
+			<p><strong>Test Results:</strong><br> 
+			<div id="calculator-tests-results"></div></p>
 		</div>
 	</div>
 </body>
