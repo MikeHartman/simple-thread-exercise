@@ -35,6 +35,7 @@
 						'endDate': $(this).children('end_date').datepicker('getDate'),
 					}
   				}).get();
+			debugProjects = projects;
 			var result = reimbursementCalculator.calculateProjects(projects);
 			if (result < 0) {
 				$('#calculator-error').show();
