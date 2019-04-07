@@ -13,13 +13,15 @@
 		$('body').on('focus', ".datepicker_input", function() {
     		$(this).datepicker();
 		});
+		$('body').on('click', ".add-project", function() {
+			$('#default-project').clone().insertAfter('.project-input:last');
+		});
 	</script>
 </head>
 <body>
 	<div id="ui-wrapper">
 		<div id="project-inputs">
 			<div id="default-project" class="project-input">
-				<span class="project-label">Project 1</span>
 				Cost:
 				<!-- Ideally the values for the cost tiers should be coming directly from the javascript
 					to make sure it all stays in sync, but since this UI is just here to facilitate testing
