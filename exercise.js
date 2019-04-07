@@ -55,6 +55,10 @@ var reimbursementCalculator = (function () {
 		// needs a valid cost
 		valid = valid && (project.cost == LOW_COST || project.cost == HIGH_COST);
 		
+		// Shouldn't accept null/empty values for dates. Will successfully create a Date
+		// set to the default value, but definitely not what the user intended to do.
+		valid = valid && project.startDate && project.endDate;
+		
 		var startDate = new Date(project.startDate);
 		var endDate = new Date(project.endDate);
 		
@@ -258,6 +262,22 @@ var noEndDateTest = [
   }
 ]
 
+var emptyStartDateTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+	'startDate': null,
+    'endDate': new Date(2015,08,03)
+  }
+]
+
+var emptyEndDateTest = [
+  {
+    'cost': reimbursementCalculator.getLowCost(),
+    'startDate': new Date(2015,08,01),
+    'endDate': ""
+  }
+]
+
 var testOneExpected = 135;
 var testTwoExpected = 410;
 var testThreeExpected = 355;
@@ -276,6 +296,8 @@ var badDateRangeTestResult = reimbursementCalculator.calculateProjects(badDateRa
 var noCostTestResult = reimbursementCalculator.calculateProjects(noCostTest);
 var noStartDateTestResult = reimbursementCalculator.calculateProjects(noStartDateTest);
 var noEndDateTestResult = reimbursementCalculator.calculateProjects(noEndDateTest);
+var emptyStartDateTestResult = reimbursementCalculator.calculateProjects(emptyStartDateTest);
+var emptyEndDateTestResult = reimbursementCalculator.calculateProjects(emptyEndDateTest);
 
 function displayTestResult(label, expected, result) {
 	document.write(label + ": Expected " + expected + ", Calculated " + result + ".");
@@ -294,4 +316,5 @@ displayTestResult("Bad Date Range Test", validationTestsExpected, badDateRangeTe
 displayTestResult("No Cost Test", validationTestsExpected, noCostTestResult);
 displayTestResult("No Start Date Test", validationTestsExpected, noStartDateTestResult);
 displayTestResult("No End Date Test", validationTestsExpected, noEndDateTestResult);
-
+displayTestResult("Empty Start Date Test", validationTestsExpected, emptyStartDateTestResult);
+displayTestResult("Empty End Date Test", validationTestsExpected, emptyEndDateTestResult);
