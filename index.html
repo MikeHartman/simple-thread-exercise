@@ -14,7 +14,9 @@
     		$(this).datepicker();
 		});
 		$('body').on('click', '.add-project', function() {
-			$('.project-input:last').clone().insertAfter('.project-input:last');
+			var newProject = $('.project-input:last').clone();
+			newProject.find('input.hasDatepicker').removeClass('hasDatepicker').removeAttr('id');
+			newProject.insertAfter('.project-input:last');
 			$('#project-inputs').addClass('multiple_projects');
 		});
 		$('body').on('click', '.remove-project', function() {
