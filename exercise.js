@@ -106,7 +106,8 @@ var reimbursementCalculator = (function () {
 	
 	function getDateFromKey(key) {
 		var date = new Date();
-		return date.setTime(key);
+		date.setTime(key);
+		return date;
 	}
 	
 	function getCostForDay(dayKey) {
