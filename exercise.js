@@ -105,6 +105,8 @@ var reimbursementCalculator = (function () {
 		var tomorrowKey = getRelativeDayKey(dayKey, 1);
 		
 		console.log("Getting cost for date " + new Date(dayKey));
+		console.log("dayKey: " + dayKey);
+		debugDayMap = dayMap;
 		if (yesterdayKey in dayMap && tomorrowKey in dayMap) {
 			// not an "edge" day, so full, not travel
 			console.log("Yesterday (" + new Date(yesterdayKey) + ") and tomorrow (" 
