@@ -116,20 +116,13 @@ var reimbursementCalculator = (function () {
 		var yesterdayKey = getRelativeDayKey(dayKey, -1);
 		var tomorrowKey = getRelativeDayKey(dayKey, 1);
 		
-		console.log("Getting cost for date " + getDateFromKey(dayKey));
-		debugDayMap = dayMap;
 		if (yesterdayKey in dayMap && tomorrowKey in dayMap) {
 			// not an "edge" day, so full, not travel
-			console.log("Yesterday (" + getDateFromKey(yesterdayKey) + ") and tomorrow (" 
-				+ getDateFromKey(tomorrowKey) + ") are both in map, so this is a FULL day");
 			dayType = FULL_TYPE;
 		} else {
-			console.log("Either yesterday (" + getDateFromKey(yesterdayKey) + ") or tomorrow (" 
-				+ getDateFromKey(tomorrowKey) + ") are not in map, so this is a TRAVEL day");
 			dayType = TRAVEL_TYPE;
 		}
 		
-		console.log("Billing " + RATE_TABLE[dayMap[dayKey]][dayType]);
 		return RATE_TABLE[dayMap[dayKey]][dayType];
 		
 	}
