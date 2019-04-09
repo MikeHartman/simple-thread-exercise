@@ -5,7 +5,7 @@ var reimbursementCalculatorTester = (function () {
 	var testSuite = [
 		{
 			'label': "Example Project Set 1",
-			'expected': 135,
+			'expected': 165,
 			'projects': [
 				{
 					'cost': reimbursementCalculator.getLowCost(),
@@ -15,7 +15,7 @@ var reimbursementCalculatorTester = (function () {
 			]
 		},{
 			'label': "Example Project Set 2",
-			'expected': 410,
+			'expected': 590,
 			'projects': [
 				{
 					'cost': reimbursementCalculator.getLowCost(),
@@ -33,7 +33,7 @@ var reimbursementCalculatorTester = (function () {
 			]
 		},{
 			'label': "Example Project Set 3",
-			'expected': 355,
+			'expected': 445,
 			'projects': [
 				{
 					'cost': reimbursementCalculator.getLowCost(),
@@ -51,7 +51,7 @@ var reimbursementCalculatorTester = (function () {
 			]
 		},{
 			'label': "Example Project Set 4",
-			'expected': 155,
+			'expected': 185,
 			'projects': [
 				{
 					'cost': reimbursementCalculator.getLowCost(),
