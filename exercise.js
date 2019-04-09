@@ -87,7 +87,7 @@ var reimbursementCalculator = (function () {
 		
 		while (day <= endDate) {
 			
-			var dayKey = day.getTime();
+			var dayKey = getKeyFromDate(day);
 			if (!(dayKey in dayMap) || dayMap[dayKey] < project.cost) {
 				// track the highest cost tier we've seen for this day
 				dayMap[dayKey] = project.cost;
@@ -98,23 +98,33 @@ var reimbursementCalculator = (function () {
 		
 	}
 	
+	// Starting to run into some bugs related to converting to/from keys, so better
+	// to abstract it out into dedicated methods and keep any fixes in one place
+	function getKeyFromDate(date) {
+		return date.getTime();
+	}
+	
+	function getDateFromKey(key) {
+		var date = new Date();
+		return date.setTime(key);
+	}
+	
 	function getCostForDay(dayKey) {
 	
 		var dayType = 0;
 		var yesterdayKey = getRelativeDayKey(dayKey, -1);
 		var tomorrowKey = getRelativeDayKey(dayKey, 1);
 		
-		console.log("Getting cost for date " + new Date(dayKey));
-		console.log("dayKey: " + dayKey);
+		console.log("Getting cost for date " + getDateFromKey(dayKey));
 		debugDayMap = dayMap;
 		if (yesterdayKey in dayMap && tomorrowKey in dayMap) {
 			// not an "edge" day, so full, not travel
-			console.log("Yesterday (" + new Date(yesterdayKey) + ") and tomorrow (" 
-				+ new Date(tomorrowKey) + ") are both in map, so this is a FULL day");
+			console.log("Yesterday (" + getDateFromKey(yesterdayKey) + ") and tomorrow (" 
+				+ getDateFromKey(tomorrowKey) + ") are both in map, so this is a FULL day");
 			dayType = FULL_TYPE;
 		} else {
-			console.log("Either yesterday (" + new Date(yesterdayKey) + ") or tomorrow (" 
-				+ new Date(tomorrowKey) + ") are not in map, so this is a TRAVEL day");
+			console.log("Either yesterday (" + getDateFromKey(yesterdayKey) + ") or tomorrow (" 
+				+ getDateFromKey(tomorrowKey) + ") are not in map, so this is a TRAVEL day");
 			dayType = TRAVEL_TYPE;
 		}
 		
@@ -125,7 +135,7 @@ var reimbursementCalculator = (function () {
 	
 	function getRelativeDayKey(dayKey, deltaDays) {
 		
-		var newDay = new Date(dayKey);
+		var newDay = getDateFromKey(dayKey);
 		newDay.setDate(newDay.getDate() + deltaDays);
 		return newDay.getTime();
 		
